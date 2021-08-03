@@ -1,0 +1,13 @@
+.Page {
+  width: 510px;
+  height: 350px;
+  position: fixed;
+  background-color: papayawhip;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Page_classTitle {
+  color: black;
+}
