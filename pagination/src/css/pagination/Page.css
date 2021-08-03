@@ -1,11 +1,7 @@
-.Page {
-  width: 510px;
-  height: 350px;
-  position: fixed;
-  background-color: papayawhip;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.Page_container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .Page_classTitle {
