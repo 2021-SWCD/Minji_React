@@ -1,7 +1,7 @@
 .Nav {
     width: 710px;
     height: 50px;
-    position: fixed;
+    /* position: fixed; */
     background-color: papayawhip;
     display: flex;
     justify-content: space-between;
@@ -10,7 +10,7 @@
   
   .Nav_title {
     margin-left: 10px;
-    color: green;
+    color: rgb(141, 160, 141);
     font-family: "Jalnan";
   }
   
