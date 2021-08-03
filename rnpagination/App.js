@@ -1,80 +1,66 @@
-import React, { useState, useEffect } from "react";
+import React from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
   View,
+  Image,
+  Text,
+  FlatList,
 } from 'react-native';
-import Posts from "./Posts";
-import Pagination from "./Pagination";
-import axios from "axios";
-import "../../css/pagination/Page.css";
-import Navigator from "../navigator/Navigator";
 
-/**
- * 
- * @author 주민지
+export default class App extends React.Component {
+  state = {
+    data: [],
+    page: 1,
+    refreshing: false
+  }
+
+  _getData = () => {
+    const url = 'https://jsonplaceholder.typicode.com/photos';
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        this.setState({
+          data: this.state.data.concat(data),
+          page: this.state.page + 1,
+          refreshing: false
+        });
+      });
+  }
+
+  componentDidMount() {
+    this._getData();
+  }
+
+  _renderItem = ({item}) => (
+    <View style={{borderBottomWidth:1, marginTop: 20}}>
+      <Image source={{ uri: item.url }} style={{ height: 200 }}/>
+      <Text>{item.title}</Text>
+      <Text>{item.id}</Text>
+    </View>
+  );
+
+  /* _handleLoadMore = () => {
+    this._getData();
+  }
  */
 
-export default function App () {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(10);
+  _handleRefresh = () => {
+    this.setState({
+      refreshing: true,
+      page: 1,
+    }, this._getData);
+  }
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      setLoading(true);
-      const res = await axios.get("https://jsonplaceholder.typicode.com/posts");
-      setPosts(res.data);
-      setLoading(false);
-    };
-
-    fetchPosts();
-  }, []);
-
-  //Get current posts
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexFirstPost, indexOfLastPost);
-
-  console.log(posts);
-
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  return (
-    <div className="Page_container mt-3">
-      {/* className은 단순히 클래스 명이다 */}
-      <Posts posts={currentPosts} loading={loading} />
-      <Pagination
-        postsPerPage={postsPerPage}
-        totalPosts={posts.length}
-        paginate={paginate}
+  render() {
+    return (
+      <FlatList
+        data={this.state.data}
+        renderItem={this._renderItem}
+        keyExtractor={(item, index) => item.id}
+        onEndReached={this._handleLoadMore}
+        onEndReachedThreshold={1}
+        refreshing={this.state.refreshing}
+        onRefresh={this._handleRefresh}
       />
-    </div>
-  );
-};
-
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+    );
+  }
+}
