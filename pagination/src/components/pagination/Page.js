@@ -38,7 +38,7 @@ export default function Page () {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div className="container mt-3">
+    <div className="Page_container mt-3">
       {/* className은 단순히 클래스 명이다 */}
       <Posts posts={currentPosts} loading={loading} />
       <Pagination
